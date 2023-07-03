@@ -14,7 +14,24 @@ function App() {
         { id: crypto.randomUUID(), title: newItem, completed: false },
       ];
     });
-    setNewItem("")
+    setNewItem("");
+  }
+
+  function toggleTodo(id, completed) {
+    setTodos((currentTodos) => {
+      return currentTodos.map((todo) => {
+        if (todo.id === id) {
+          return { ...todo, completed };
+        }
+        return todo;
+      });
+    });
+  }
+
+  function deleteTodo(id){
+    setTodos(currentTodos =>{
+      return currentTodos.filter(todo => todo.id !== id)
+    })
   }
 
   return (
@@ -26,32 +43,29 @@ function App() {
             value={newItem}
             onChange={(e) => setNewItem(e.target.value)}
             type="text"
-            id="item"
+            id="item" 
           />
         </div>
         <button className="btn">Add</button>
       </form>
       <h1 className="header">To Do List</h1>
       <ul className="list">
+        {todos.length===0 && "No Item"} {/*  Short Circuiting */}
         {todos.map((todo) => {
           return (
             <li key={todo.id}>
               <label>
-                <input type="checkbox" checked={todo.completed} />
+                <input
+                  type="checkbox"
+                  checked={todo.completed}
+                  onChange={(e) => toggleTodo(todo.id, e.target.checked)}
+                />
                 {todo.title}
               </label>
-              <button className="btn btn-danger">Delete</button>
+              <button className="btn btn-danger" onClick={()=> deleteTodo(todo.id)}>Delete</button>
             </li>
           );
         })}
-
-        <li>
-          <label>
-            <input type="checkbox" />
-            Item 2
-          </label>
-          <button className="btn btn-danger">Delete</button>
-        </li>
       </ul>
     </>
   );
